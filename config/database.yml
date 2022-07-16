@@ -13,19 +13,19 @@ default: &default
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password:
   host: localhost
 
-development:
+development: &development
   <<: *default
+  username: <%= ENV['DEV_DATABASE_USERNAME'] || 'root' %>
+  password: <%= ENV['DEV_DATABASE_PASSWORD'] || 'root' %>
   database: rails_card_engine_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
-  <<: *default
+  <<: *development
   database: rails_card_engine_test
 
 # As with config/credentials.yml, you never want to store sensitive information,
@@ -50,6 +50,5 @@ test:
 #
 production:
   <<: *default
-  database: rails_card_engine_production
-  username: rails_card_engine
-  password: <%= ENV["RAILS_CARD_ENGINE_DATABASE_PASSWORD"] %>
+  # DATABASE_URL configured as an env var in Heroku settings
+  url: <%= ENV['DATABASE_URL'] %>
